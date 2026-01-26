@@ -66,7 +66,7 @@ $wget https://sources.archlinux.org/other/libfilezilla/libfilezilla-${libfilezil
 tar xf libfilezilla-${libfilezilla_version}.tar.xz
 pushd libfilezilla-${libfilezilla_version}
 autoreconf -fi
-./configure --host=$TARGET --prefix=${libfilezilla_path} --disable-shared --enable-static 
+./configure --host=$TARGET --prefix=${libfilezilla_path}
 gnumakeplusinstall
 popd
 rm -rf libfilezilla-${libfilezilla_version}
