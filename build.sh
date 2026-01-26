@@ -32,7 +32,7 @@ libfilezilla_version=0.54.0
 libfilezilla_path=$PWD/libfilezilla-windows-$arch
 filezilla_version=3.69.5
 filezilla_path=$PWD/filezilla-windows-$arch
-wxwidgets_version=3.3.1
+wxwidgets_version=3.2.9
 wxwidgets_path=$PWD/wxmsw-windows-$arch
 
 export PATH=$llvm_dir/bin:$wxwidgets_path/bin:$PATH
@@ -57,7 +57,7 @@ pushd wxWidgets
 # fi
 mkdir build-$TARGET
 cd build-$TARGET
-../configure --host=$TARGET --prefix=${wxwidgets_path} --with-zlib=sys --with-msw --with-libiconv-prefix=$vcpkg_dir --disable-shared --disable-debug_flag --enable-optimise --enable-unicode
+../configure --host=$TARGET --prefix=${wxwidgets_path} --with-zlib=sys --with-msw --with-libiconv-prefix=$vcpkg_dir --disable-shared --disable-debug_flag --enable-optimise
 gnumakeplusinstall
 popd
 
