@@ -90,8 +90,7 @@ $wget https://www.gnupg.org/ftp/gcrypt/gnutls/v${gnutls_ver_main}/gnutls-${gnutl
 tar xf gnutls-${gnutls_ver}.tar.xz
 pushd gnutls-${gnutls_ver}
 ./configure --build=x86_64-linux-gnu --host=$TARGET --prefix=$prefix --disable-hardware-acceleration --without-p11-kit --with-included-libtasn1 --enable-shared --enable-static=no --enable-threads=windows --disable-tools --with-zlib=yes --disable-tests --disable-openssl-compatibility --disable-doc --disable-cxx
-make -j $(nproc)
-make install
+gnumakeplusinstall
 popd
 
 # Build libfilezilla
@@ -100,6 +99,7 @@ tar xf libfilezilla-${libfilezilla_version}.tar.xz
 pushd libfilezilla-${libfilezilla_version}
 autoreconf -fi
 ./configure --host=$TARGET --prefix=$prefix --enable-shared --enable-static=no 
+sed -i "s|-g++|-g++ $libclang_rt|g" libtool
 gnumakeplusinstall
 popd
 rm -rf libfilezilla-${libfilezilla_version}
