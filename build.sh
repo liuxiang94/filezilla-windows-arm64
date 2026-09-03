@@ -128,6 +128,7 @@ meson install
 popd
 
 # Build filezilla
+export lt_cv_deplibs_check_method="pass_all"
 $wget https://sources.archlinux.org/other/filezilla/filezilla-${filezilla_version}.tar.xz
 tar xf filezilla-${filezilla_version}.tar.xz
 pushd filezilla-${filezilla_version}

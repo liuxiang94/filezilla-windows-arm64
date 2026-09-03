@@ -6,7 +6,7 @@ on:
 jobs:
   build-windows-arm64:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       llvm_path: "${{ github.workspace }}/llvm-mingw"
     
@@ -19,6 +19,7 @@ jobs:
           sudo apt update
           sudo apt install -y \
             gcc git cmake ninja-build pkg-config p7zip libtool make colormake gettext automake autoconf autogen autopoint patch meson ninja-build autoconf-archive
+          sudo sed -i 's#-L\* | -R\* | -l\*#-L\* | -R\* | -l\* | */libclang_rt.*.a#g' /usr/share/aclocal/libtool.m4
           wget https://github.com/mstorsjo/llvm-mingw/releases/download/20260616/llvm-mingw-20260616-ucrt-ubuntu-22.04-x86_64.tar.xz
           tar -xf llvm-mingw-*.tar.xz
           rm llvm-mingw-*.tar.xz
