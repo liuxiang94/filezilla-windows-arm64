@@ -38,6 +38,7 @@ nettle_ver=nettle_4.0_release_20260205
 gmp_ver=6.3.0
 idn2_ver=2.3.8
 unistring_ver=1.4.2
+fzssh_version=1.4.0
 
 export PATH=$llvm_dir/bin:$PATH
 export PKG_CONFIG_LIBDIR=$vcpkg_libs_dir/lib/pkgconfig:$prefix/lib/pkgconfig
@@ -102,7 +103,21 @@ autoreconf -fi
 sed -i "s|-g++|-g++ $libclang_rt|g" libtool
 gnumakeplusinstall
 popd
-rm -rf libfilezilla-${libfilezilla_version}
+
+# Build fzssh (libfzssh-client)
+$wget https://sources.archlinux.org/other/packages/fzssh/fzssh-${fzssh_version}.tar.xz
+tar xf fzssh-${fzssh_version}.tar.xz
+pushd fzssh-${fzssh_version}
+mkdir build
+cd build
+meson setup .. \
+    --cross-file $work_dir/cross.txt \
+    --prefix=$prefix \
+    --buildtype=release \
+    --default-library=shared
+meson compile
+meson install
+popd
 
 # Build filezilla
 $wget https://sources.archlinux.org/other/filezilla/filezilla-${filezilla_version}.tar.xz
@@ -129,5 +144,3 @@ fi
 sed -i '/fzstorj/d' makezip.sh
 bash makezip.sh ${filezilla_path}
 mv FileZilla.zip $work_dir/filezilla_${filezilla_version}_$arch.zip
-popd
-rm -rf filezilla-${filezilla_version}
