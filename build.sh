@@ -39,6 +39,7 @@ gmp_ver=6.3.0
 idn2_ver=2.3.8
 unistring_ver=1.4.2
 fzssh_version=1.4.0
+wxwidgets_version=3.2.11
 
 export PATH=$llvm_dir/bin:$PATH
 export PKG_CONFIG_LIBDIR=$vcpkg_libs_dir/lib/pkgconfig:$prefix/lib/pkgconfig
@@ -53,6 +54,13 @@ function gnumakeplusinstall {
     make -j $(nproc)
     make install
 }
+
+# Build wxwidgets
+[ -d wxWidgets ] || $gitclone --branch v$wxwidgets_version --recurse-submodules --depth 1 https://github.com/wxWidgets/wxWidgets.git
+pushd wxWidgets
+./configure --host=$TARGET --prefix=$prefix --with-zlib=sys --with-msw --enable-shared --disable-debug_flag --enable-optimise --enable-unicode
+gnumakeplusinstall
+popd
 
 # build libunistring
 $wget https://ftp.gnu.org/gnu/libunistring/libunistring-${unistring_ver}.tar.xz
@@ -129,7 +137,7 @@ autoreconf -fi
 pushd src/fzshellext
 autoreconf -fi
 popd
-./configure --build=x86_64-linux-gnu --host=$TARGET --prefix=${filezilla_path} --disable-shared --enable-static  --with-pugixml=builtin --disable-storj --with-wx-config=${wxwidgets_path}/bin/wx-config
+./configure --build=x86_64-linux-gnu --host=$TARGET --prefix=${filezilla_path} --disable-shared --enable-static  --with-pugixml=builtin --disable-storj --with-wx-config=$prefix/bin/wx-config
 gnumakeplusinstall
 find . -name "*.exe" -exec $TARGET-strip {} \;
 find . -name "*.dll" -exec $TARGET-strip {} \;
