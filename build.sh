@@ -137,7 +137,7 @@ autoreconf -fi
 pushd src/fzshellext
 autoreconf -fi
 popd
-./configure --build=x86_64-linux-gnu --host=$TARGET --prefix=${filezilla_path} --disable-shared --enable-static  --with-pugixml=builtin --disable-storj --with-wx-config=$prefix/bin/wx-config
+./configure --build=x86_64-linux-gnu --host=$TARGET --prefix=${filezilla_path} --enable-shared --disable-static  --with-pugixml=builtin --disable-storj --with-wx-config=$prefix/bin/wx-config
 gnumakeplusinstall
 find . -name "*.exe" -exec $TARGET-strip {} \;
 find . -name "*.dll" -exec $TARGET-strip {} \;
