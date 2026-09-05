@@ -6,7 +6,7 @@ on:
 jobs:
   build-windows-arm64:
     name: Build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       llvm_path: "${{ github.workspace }}/llvm-mingw"
     
@@ -63,7 +63,7 @@ jobs:
         with:
           name: filezilla_arm64
           path: |
-            ./filezilla_*.zip
+            ./FileZilla*.zip
 
       - name: Batch release
         uses: softprops/action-gh-release@v2
@@ -72,4 +72,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            ./filezilla_*.zip
+            ./FileZilla*.zip

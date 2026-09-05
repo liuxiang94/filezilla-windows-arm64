@@ -140,10 +140,6 @@ autoreconf -fi
 popd
 ./configure --build=x86_64-linux-gnu --host=$TARGET --prefix=${filezilla_path} --enable-shared --disable-static  --with-pugixml=builtin --disable-storj --with-wx-config=$prefix/bin/wx-config
 gnumakeplusinstall
-find . -name "*.exe" -exec $TARGET-strip {} \;
-find . -name "*.dll" -exec $TARGET-strip {} \;
-find ${filezilla_path} -name "*.exe" -exec $TARGET-strip {} \;
-find ${filezilla_path} -name "*.dll" -exec $TARGET-strip {} \;
 cd data
 if [ $arch == "arm64" ]; then
     sed -i '/fzshellext\/32/d' makezip.sh
@@ -152,4 +148,34 @@ elif [ $arch == "arm32" ]; then
 fi
 sed -i '/fzstorj/d' makezip.sh
 bash makezip.sh ${filezilla_path}
-mv FileZilla.zip $work_dir/filezilla_${filezilla_version}_$arch.zip
+mv FileZilla.zip $work_dir
+popd
+
+# copy dlls
+rm -rf filezilla-${filezilla_version}
+7z x FileZilla.zip
+rm FileZilla.zip
+cd FileZilla-${filezilla_version}
+cp ${llvm_dir}/${TARGET}/bin/libc++.dll .
+cp ${llvm_dir}/${TARGET}/bin/libunwind.dll .
+cp ${vcpkg_libs_dir}/bin/libargon2.dll .
+cp ${vcpkg_libs_dir}/bin/libz.dll .
+cp ${vcpkg_libs_dir}/bin/libsqlite3.dll .
+cp ${prefix}/bin/libfzssh*.dll .
+cp ${prefix}/bin/libfilezilla*.dll .
+cp ${prefix}/bin/libgmp*.dll .
+cp ${prefix}/bin/libgnutls*.dll .
+cp ${prefix}/bin/libidn2*.dll .
+cp ${prefix}/bin/libhogweed*.dll .
+cp ${prefix}/bin/libnettle*.dll .
+cp ${prefix}/bin/libunistring*.dll .
+cp ${prefix}/bin/wxbase32u_gcc_custom.dll .
+cp ${prefix}/bin/wxbase32u_xml_gcc_custom.dll .
+cp ${prefix}/bin/wxmsw32u_aui_gcc_custom.dll .
+cp ${prefix}/bin/wxmsw32u_core_gcc_custom.dll .
+cp ${prefix}/bin/wxmsw32u_html_gcc_custom.dll .
+cp ${prefix}/bin/wxmsw32u_xrc_gcc_custom.dll .
+$TARGET-strip *.dll
+$TARGET-strip *.exe
+cd ..
+7z a FileZilla-${filezilla_version}.zip FileZilla-${filezilla_version}
